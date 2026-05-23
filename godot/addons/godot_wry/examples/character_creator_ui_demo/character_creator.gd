@@ -62,7 +62,7 @@ func _on_web_view_ipc_message(message):
 			OS.shell_open(data.url)
 			
 		"open_devtools":
-			$WebView.open_devtools()
+			$WebViewCompat.open_devtools()
 		
 		"change_tab":
 			var tween = get_tree().create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
