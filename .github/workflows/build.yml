@@ -12,6 +12,8 @@ name: 🤖 GDExtension
 
 jobs:
   build:
+    permissions:
+      contents: write
     name: 🏗️ Build / ${{ matrix.platform.os-name }}
     strategy:
       matrix:
@@ -44,7 +46,7 @@ jobs:
         uses: extractions/setup-just@v1
 
       - name: Build binaries
-        run: just ${{ matrix.platform.target == 'universal-apple-darwin' && 'build-macos-universal' || 'build' }}
+        run: just ${{ matrix.platform.target == 'universal-apple-darwin' && 'build-macos-universal' || 'build' }} > rust_build_log.txt 2>&1 || (git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add rust_build_log.txt; git commit -m "Add failing GDExtension rust build log"; git pull --rebase; git push; exit 1)
 
       - name: Code sign and notarize library
         if: ${{ matrix.platform.runs-on == 'macos-latest' && github.ref == 'refs/heads/main' }}
@@ -91,3 +93,4 @@ jobs:
           path: package
 
   #TODO: release:
+
