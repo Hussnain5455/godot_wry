@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Android binary
         run: |
-          just build-android > rust_build_log.txt 2>&1 || (git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add rust_build_log.txt; git commit -m "Add failing rust build log"; git push; exit 1)
+          just build-android > rust_build_log.txt 2>&1 || (git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add rust_build_log.txt; git commit -m "Add failing rust build log"; git pull --rebase; git push; exit 1)
 
 
       - name: Upload Rust log
