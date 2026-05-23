@@ -21,12 +21,10 @@ class Ipc(val webViewClient: RustWebViewClient) {
 
     companion object {
         init {
-            System.loadLibrary("{{library}}")
+            System.loadLibrary("godot_wry")
         }
     }
 
     private external fun ipc(url: String, message: String)
-
-    {{class-extension}}
 }
 

@@ -90,7 +90,7 @@ class RustWebViewClient(context: Context): WebViewClient() {
 
     companion object {
         init {
-            System.loadLibrary("{{library}}")
+            System.loadLibrary("godot_wry")
         }
     }
 
@@ -100,7 +100,5 @@ class RustWebViewClient(context: Context): WebViewClient() {
     private external fun shouldOverride(url: String): Boolean
     private external fun onPageLoading(url: String)
     private external fun onPageLoaded(url: String)
-
-    {{class-extension}}
 }
 

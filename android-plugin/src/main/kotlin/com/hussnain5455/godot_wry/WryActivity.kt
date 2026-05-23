@@ -115,7 +115,7 @@ abstract class WryActivity : GodotActivity() {
 
     companion object {
         init {
-            System.loadLibrary("{{library}}")
+            System.loadLibrary("godot_wry")
         }
     }
 
@@ -129,7 +129,5 @@ abstract class WryActivity : GodotActivity() {
     private external fun onActivityDestroy()
     private external fun memory()
     private external fun focus(focus: Boolean)
-
-    {{class-extension}}
 }
 

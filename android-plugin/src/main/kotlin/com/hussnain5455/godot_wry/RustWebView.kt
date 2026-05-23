@@ -34,7 +34,6 @@ class RustWebView(context: Context, val initScripts: Array<String>, val id: Stri
           isDocumentStartScriptEnabled = false
         }
 
-        {{class-init}}
     }
 
     fun loadUrlMainThread(url: String) {
@@ -94,7 +93,5 @@ class RustWebView(context: Context, val initScripts: Array<String>, val id: Stri
 
     private external fun shouldOverride(url: String): Boolean
     private external fun onEval(id: Int, result: String)
-
-    {{class-extension}}
 }
 
