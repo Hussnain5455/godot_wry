@@ -39,9 +39,10 @@ repositories {
 
 dependencies {
     // Godot Android Library (provided at runtime)
-    compileOnly 'org.godotengine:godot:4.2.0.stable'
+    compileOnly 'org.godotengine:godot:4.2.1.stable'
 
     // AndroidX libraries used by Wry
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.webkit:webkit:1.9.0'
 }
+

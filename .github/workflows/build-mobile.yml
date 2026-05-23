@@ -34,14 +34,8 @@ jobs:
 
       - name: Build Android binary
         run: |
-          cd rust
-          mkdir -p target/kotlin_out
-          cargo ndk -t arm64-v8a build --release
+          just build-android
 
-      - name: Copy binaries
-        run: |
-          mkdir -p godot/addons/godot_wry/bin/aarch64-linux-android
-          cp rust/target/aarch64-linux-android/release/libgodot_wry.so godot/addons/godot_wry/bin/aarch64-linux-android/
 
       - name: Upload Rust binary
         uses: actions/upload-artifact@v4
@@ -62,13 +56,12 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
       - name: Build AAR Plugin
-        run: |
-          cd android-plugin
-          gradle assembleRelease
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: android-plugin
+          arguments: assembleRelease
+
 
       - name: Copy AAR to Addon
         run: |
