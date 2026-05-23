@@ -1,0 +1,82 @@
+name: 📱 Mobile Builds
+
+on:
+  push:
+    branches: main
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: main
+
+jobs:
+  android-rust:
+    name: 🤖 Android Rust Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      - name: Set up NDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Just
+        uses: extractions/setup-just@v1
+
+      - name: Build Android binary
+        run: |
+          cd rust
+          mkdir -p target/kotlin_out
+          cargo ndk -t arm64-v8a build --release
+
+      - name: Copy binaries
+        run: |
+          mkdir -p godot/addons/godot_wry/bin/aarch64-linux-android
+          cp rust/target/aarch64-linux-android/release/libgodot_wry.so godot/addons/godot_wry/bin/aarch64-linux-android/
+
+      - name: Upload Rust binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: libgodot_wry-android
+          path: godot/addons/godot_wry/bin/aarch64-linux-android
+
+  android-plugin:
+    name: 🤖 Android Plugin AAR Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Build AAR Plugin
+        run: |
+          cd android-plugin
+          gradle assembleRelease
+
+      - name: Copy AAR to Addon
+        run: |
+          mkdir -p godot/addons/godot_wry/bin/android
+          cp android-plugin/build/outputs/aar/android-plugin-release.aar godot/addons/godot_wry/bin/android/godot_wry_plugin.aar
+
+      - name: Upload AAR Plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot_wry_plugin-aar
+          path: godot/addons/godot_wry/bin/android

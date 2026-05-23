@@ -22,6 +22,20 @@ use {
     raw_window_handle::{XlibWindowHandle},
 };
 
+#[cfg(target_os = "android")]
+use {
+    raw_window_handle::{AndroidNdkWindowHandle},
+    std::ptr::NonNull,
+    std::ffi::c_void,
+};
+
+#[cfg(target_os = "ios")]
+use {
+    raw_window_handle::{UiKitWindowHandle},
+    std::ffi::c_void,
+    std::ptr::NonNull,
+};
+
 pub struct GodotWindow {
     pub window_id: i32,
 }
@@ -112,4 +126,31 @@ impl HasWindowHandle for GodotWindow {
             ))
         }
     }
+
+    #[cfg(target_os = "android")]
+    fn window_handle(&self) -> Result<WindowHandle<'_>, HandleError> {
+        // Android WRY doesn't use the window handle, it uses WryActivity context.
+        // We return a dummy NDK window handle to satisfy the signature.
+        unsafe {
+            Ok(WindowHandle::borrow_raw(
+                RawWindowHandle::AndroidNdk(AndroidNdkWindowHandle::new(
+                    NonNull::new(1 as *mut c_void).unwrap()
+                ))
+            ))
+        }
+    }
+
+    #[cfg(target_os = "ios")]
+    fn window_handle(&self) -> Result<WindowHandle<'_>, HandleError> {
+        let display_server = DisplayServer::singleton();
+        let window_handle = display_server.window_get_native_handle_ex(HandleType::WINDOW_VIEW).window_id(self.window_id).done();
+        unsafe {
+            Ok(WindowHandle::borrow_raw(
+                RawWindowHandle::UiKit(UiKitWindowHandle::new(
+                    NonNull::new(window_handle as *mut c_void).expect("UIView pointer should not be null")
+                ))
+            ))
+        }
+    }
 }
+

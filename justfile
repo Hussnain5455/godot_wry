@@ -3,6 +3,11 @@
 os := if os() == "macos" { "macos" } else if os() == "windows" { "windows" } else { "linux" }
 target := if os == "macos" { arch() + "-apple-darwin" } else if os == "windows" { arch() + "-pc-windows-msvc" } else { arch() + "-unknown-linux-gnu" }
 
+export WRY_ANDROID_PACKAGE := "com.hussnain5455.godot_wry"
+export WRY_ANDROID_LIBRARY := "godot_wry"
+export WRY_ANDROID_KOTLIN_FILES_OUT_DIR := "target/kotlin_out"
+
+
 default: build
 
 set working-directory := 'rust'
@@ -63,3 +68,17 @@ build-linux:
 build-windows:
 	@echo "Building for Windows..."
 	just os="windows" build
+
+build-android:
+	@echo "Building for Android..."
+	@just _build-android
+	@just _copy-to-godot-android
+
+_build-android:
+	mkdir -p ./target/kotlin_out
+	cargo ndk -t arm64-v8a build --release
+
+_copy-to-godot-android:
+	mkdir -p ../godot/addons/godot_wry/bin/aarch64-linux-android
+	cp ./target/aarch64-linux-android/release/libgodot_wry.so ../godot/addons/godot_wry/bin/aarch64-linux-android/
+
