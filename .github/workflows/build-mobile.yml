@@ -76,7 +76,7 @@ jobs:
       - name: Build AAR Plugin
         run: |
           cd android-plugin
-          gradle assembleRelease --info > gradle_build_log.txt 2>&1 || (cat gradle_build_log.txt; git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add gradle_build_log.txt; git commit -m "Add failing gradle build log" || true; git pull --rebase; git push || true; exit 1)
+          gradle assembleRelease --info > gradle_build_log_${{ github.run_id }}.txt 2>&1 || (cat gradle_build_log_${{ github.run_id }}.txt; git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add gradle_build_log_${{ github.run_id }}.txt; git commit -m "Add failing gradle build log for run ${{ github.run_id }}"; git pull --rebase; git push || true; exit 1)
 
       - name: Upload Gradle log
         if: always()
