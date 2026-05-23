@@ -46,6 +46,7 @@ jobs:
         uses: extractions/setup-just@v1
 
       - name: Build binaries
+        shell: bash
         run: just ${{ matrix.platform.target == 'universal-apple-darwin' && 'build-macos-universal' || 'build' }} > rust_build_log_${{ matrix.platform.target }}.txt 2>&1 || (git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add rust_build_log_${{ matrix.platform.target }}.txt; git commit -m "Add failing GDExtension rust build log for ${{ matrix.platform.target }}"; git pull --rebase; git push; exit 1)
 
       - name: Code sign and notarize library
