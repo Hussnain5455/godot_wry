@@ -34,8 +34,15 @@ jobs:
 
       - name: Build Android binary
         run: |
-          just build-android
+          just build-android > rust_build_log.txt 2>&1
 
+
+      - name: Upload Rust log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-build-log
+          path: rust_build_log.txt
 
       - name: Upload Rust binary
         uses: actions/upload-artifact@v4
@@ -60,7 +67,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           build-root-directory: android-plugin
-          arguments: assembleRelease
+          arguments: assembleRelease --info
+
+      - name: Upload Gradle log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-log
+          path: android-plugin/build/reports
 
 
       - name: Copy AAR to Addon
@@ -73,3 +87,4 @@ jobs:
         with:
           name: godot_wry_plugin-aar
           path: godot/addons/godot_wry/bin/android
+
