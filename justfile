@@ -5,7 +5,7 @@ target := if os == "macos" { arch() + "-apple-darwin" } else if os == "windows" 
 
 export WRY_ANDROID_PACKAGE := "com.hussnain5455.godot_wry"
 export WRY_ANDROID_LIBRARY := "godot_wry"
-export WRY_ANDROID_KOTLIN_FILES_OUT_DIR := "target/kotlin_out"
+export WRY_ANDROID_KOTLIN_FILES_OUT_DIR := justfile_directory() + "/rust/target/kotlin_out"
 
 
 default: build
