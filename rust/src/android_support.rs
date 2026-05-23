@@ -3,7 +3,9 @@
 use jni::objects::JObject;
 use jni::JNIEnv;
 
-wry::android_binding! { com_hussnain5455, godot_wry }
+fn _wry_binding_hack() {
+    wry::android_binding!(com_hussnain5455, godot_wry);
+}
 
 #[no_mangle]
 pub unsafe extern "system" fn Java_com_hussnain5455_godot_1wry_WryActivity_initializeWry(
