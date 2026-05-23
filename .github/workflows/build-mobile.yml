@@ -67,10 +67,9 @@ jobs:
           java-version: '17'
 
       - name: Build AAR Plugin
-        uses: gradle/gradle-build-action@v2
-        with:
-          build-root-directory: android-plugin
-          arguments: assembleRelease --info
+        run: |
+          cd android-plugin
+          gradle assembleRelease --info > gradle_build_log.txt 2>&1 || (git config --global user.name "GitHub Action"; git config --global user.email "action@github.com"; git add gradle_build_log.txt; git commit -m "Add failing gradle build log"; git pull --rebase; git push; exit 1)
 
       - name: Upload Gradle log
         if: always()
