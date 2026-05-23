@@ -12,6 +12,9 @@ on:
 
 jobs:
   android-rust:
+    permissions:
+      contents: write
+
     name: 🤖 Android Rust Build
     runs-on: ubuntu-latest
     steps:
@@ -87,6 +90,7 @@ jobs:
         with:
           name: godot_wry_plugin-aar
           path: godot/addons/godot_wry/bin/android
+
 
 
 
